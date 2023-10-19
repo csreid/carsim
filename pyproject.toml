@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "carsim"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.7"
+numpy = "1.21.4"
+pygame = "^2.4.0"
+shapely = "^2.0.1"
+networkx = "~2.6"
+jupyterlab = "~3"
+carla = {path = "/home/csreid/CARLA_0.9.14/PythonAPI/carla/dist/carla-0.9.14-cp37-cp37m-manylinux_2_27_x86_64.whl"}
+pandas = "~1.1"
+tensorflow = "~1"
+python-dotenv = "~0.21"
+agents = "^1.4.0"
+absl-py = "^2.0.0"
+pyzmq = "^25.1.1"
+psycopg2-binary = "^2.9.9"
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "~7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
