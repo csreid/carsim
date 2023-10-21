@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 import os
 import zmq
 import json
@@ -121,8 +123,10 @@ def main():
 	receiver = ctx.socket(zmq.PULL)
 	receiver.connect('tcp://127.0.0.1:5555')
 
+	count = 0
 	while True:
 		data = receiver.recv_json()
+		count += 1
 		if data['type'] == 'imu':
 			handle_imu(data)
 		elif data['type'] == 'gnss':
@@ -133,8 +137,8 @@ def main():
 			handle_ground_truth(data)
 		elif data['type'] == 'command':
 			handle_command(data)
-		else:
-			print(data['type'])
+
+		print(count)
 
 if __name__ == '__main__':
 	main()

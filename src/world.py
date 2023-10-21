@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv(override=True)
+
 import carla
 import random
 import zmq
@@ -12,12 +15,15 @@ from utils.messages.ground_truth import GroundTruthData
 from ego_agent import spawn_ego_agent
 from utils.callback import ZMQCallback, GNSSCallback, IMUCallback, CameraCallback
 
+
 ctx = zmq.Context()
 sock = ctx.socket(zmq.PUSH)
 sock.bind('tcp://127.0.0.1:5555')
 
 try:
-	client = carla.Client(os.environ.get('CARLA_SERVER'), 2000)
+	server_url = os.environ['CARLA_SERVER']
+	print(server_url)
+	client = carla.Client(server_url, 2000)
 	world = client.get_world()
 	tm = client.get_trafficmanager(8000)
 
@@ -41,7 +47,7 @@ try:
 
 	destination = random.choice(spawn_points).location
 	world.tick()
-	vehicle, agent, destination = spawn_ego_agent(world, sock, spawn_idx=0)
+	vehicle, agent, destination, sensors = spawn_ego_agent(world, sock, spawn_idx=0)
 	agent.set_destination(destination)
 	world.tick()
 

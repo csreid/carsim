@@ -1,5 +1,8 @@
 import sys
 
+sys.path.append('/home/csreid/.pyenv/versions/3.10.12/lib/python3.10/site-packages')
+sys.path.insert(0, '/home/csreid/CARLA_0.9.14/PythonAPI/carla')
+
 import carla
 from agents.navigation.basic_agent import BasicAgent
 from agents.navigation.behavior_agent import BehaviorAgent
@@ -47,15 +50,21 @@ def spawn_ego_agent(world, zmq_sock, vehicle='micro.microlino', spawn_idx=None):
 	# Set up sensor callbacks
 	gnss_cb = GNSSCallback(zmq_sock, type="gnss")
 	imu_cb = IMUCallback(zmq_sock, type="imu")
-
 	camera_l_cb = CameraCallback(zmq_sock, type="camera", img_type="rgb", camera_location="left")
 	camera_r_cb = CameraCallback(zmq_sock, type="camera", img_type="rgb", camera_location="right")
 
+	# Add callbacks to sensors
+	camera1.listen(camera_l_cb)
+	camera2.listen(camera_r_cb)
+	imu.listen(imu_cb)
+	gnss.listen(gnss_cb)
+
+	# Spawn into given world and set a destination
 	spawns = world.get_map().get_spawn_points()
 	dest = random.choice(spawns).location
-
-	agent = BehaviorAgent(vehicle, behavior='aggressive')
+	agent = BehaviorAgent(vehicle)
 	agent.set_destination(dest)
+
 	world.tick()
 
-	return vehicle, agent, dest
+	return vehicle, agent, dest, [camera1, camera2, imu, gnss]

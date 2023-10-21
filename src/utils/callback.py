@@ -21,11 +21,15 @@ class _SensorCallback(ZMQCallback):
 		return {**{ "frame": data.frame }, **self._kwargs}
 
 	def send(self, data):
-		common_data = self._get_common_data(data)
-		sensor_data = self.get_sensor_data(data)
+		try:
+			common_data = self._get_common_data(data)
+			sensor_data = self.get_sensor_data(data)
 
-		data = {**common_data, **sensor_data}
-		return super().send(data)
+			data = {**common_data, **sensor_data}
+			return super().send(data)
+
+		except Exception as e:
+			print(e)
 
 class IMUCallback(_SensorCallback):
 	def get_sensor_data(self, data):
