@@ -1,2 +1,0 @@
-CARLA_SERVER=localhost
-DBSTRING="dbname=foo user=bar etc=etc"

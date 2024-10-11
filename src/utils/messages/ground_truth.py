@@ -3,6 +3,8 @@ from dataclasses import dataclass
 @dataclass
 class GroundTruthData:
     frame: int
+    rollout_id: str
+    sim_timestamp: float
     x: float
     y: float
     z: float
@@ -21,3 +23,4 @@ class GroundTruthData:
     throttle: float
     steer: float
     brake: float
+    is_done: bool

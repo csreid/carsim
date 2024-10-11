@@ -20,6 +20,7 @@ agents = "^1.4.0"
 absl-py = "^2.0.0"
 pyzmq = "^25.1.1"
 psycopg2-binary = "^2.9.9"
+psycopg = {extras = ["pool"], version = "^3.1.12"}
 
 
 [tool.poetry.group.dev.dependencies]

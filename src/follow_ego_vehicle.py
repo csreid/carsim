@@ -1,25 +1,41 @@
 import carla
+import os
 import time
 
-def follow_vehicle(world, vehicle_id):
-    # Get the spawned vehicle by its ID
-    vehicle = world.get_actor(vehicle_id)
+def follow_vehicle():
+	server_url = 'localhost'
+	client = carla.Client(server_url, 2000)
+	world = client.get_world()
 
-    # Create the spectator camera
-    spectator = world.get_spectator()
+	# Create the spectator camera
+	spectator = world.get_spectator()
+	vehicle = None
+	for actor in world.get_actors():
+		if actor.attributes.get('role_name') == 'hero':
+			vehicle = actor
 
-    while True:
-        # Get the current transform of the vehicle
-        vehicle_transform = carla.Transform(carla.Location(x=100, y=200, z=0), carla.Rotation())
+	while True:
+		# Get the current transform of the vehicle
+		if vehicle is None:
+			for actor in world.get_actors():
+				if actor.attributes.get('role_name') == 'hero':
+					vehicle = actor
+			continue
 
-        # Set the spectator camera's transform to follow the vehicle
-        spectator.set_transform(
-            carla.Transform(vehicle_transform.location + carla.Location(z=30),
-                            carla.Rotation(pitch=-90)))
+		spectator = world.get_spectator()
+		vehicle_transform = vehicle.get_transform()
 
-        # Sleep for a small interval
-        time.sleep(0.01)
+		# Set the spectator camera's transform to follow the vehicle
+		spectator.set_transform(
+			carla.Transform(
+				vehicle_transform.location + carla.Location(z=30),
+				carla.Rotation(pitch=-90)
+			)
+		)
+
+		if vehicle.get_transform() == carla.Transform():
+			vehicle = None
+		time.sleep(1/60.)
 
 if __name__ == '__main__':
-    vehicle_id = 123  # Replace with the actual ID of the vehicle to follow
-    follow_vehicle(vehicle_id)
+	follow_vehicle()
